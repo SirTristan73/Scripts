@@ -5,18 +5,28 @@ public  class Weapon : MonoBehaviour
 {
     [SerializeField] GameObject _bullet;
     [SerializeField] Transform _player;
+    [SerializeField] float _shootingSpeed = 1f;
+    private float _nextShotTime = 0f;
+    public bool _goFire = false;
     public List<GameObject> _bulletsFired = new List<GameObject>();
-    [SerializeField] float _bulletSpeed = 10f;
+
     void Start()
     {
-        for(int i= 0; i<5;i++){
-        Instantiate(_bullet,transform.position,Quaternion.identity);
-        _bulletsFired.Add(_bullet);}
+        GameManager.Instance._totalTimer += FireRate;
     }
-    void FixedUpdate()
+ 
+    void FireWeapon()
     {
-        foreach(GameObject i in _bulletsFired){
-        i.transform.Translate(Vector3.forward*_bulletSpeed*Time.fixedDeltaTime);}
+        Instantiate(_bullet,transform.position,Quaternion.identity);
+        _bulletsFired.Add(_bullet);
+    }
+    void FireRate(float time)
+    {
+        if (_goFire && time >= _nextShotTime)
+        {
+            FireWeapon();
+            _nextShotTime = time + 1 / _shootingSpeed;
+        }
     }
 
 }

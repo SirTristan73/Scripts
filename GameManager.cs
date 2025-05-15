@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     private float _totalTime;
     private float _currentPoints;
     public event Action<float> _timer ;
+    public event Action<float> _totalTimer;
     private void Awake()
     {
         Instance=this;
@@ -18,6 +19,7 @@ public class GameManager : MonoBehaviour
         _currentTime = Time.fixedDeltaTime;
         _totalTime += Time.fixedDeltaTime;
         _timer?.Invoke(_currentTime);
+        _totalTimer?.Invoke(_totalTime);
         _uiManager.GetCurrentTime(_totalTime);
     }
     public void AddPoints (float points)

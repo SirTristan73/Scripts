@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Elements")]
     Rigidbody _rb;
-    [SerializeField] List <ParticleSystem> _mainWeapon;
+    [SerializeField] Weapon _mainWeapon;
     [Header("InputInfo")]
     private Vector2 _currentMoveInput;
     [Header("SpeedVar")]
@@ -23,8 +23,8 @@ public class PlayerController : MonoBehaviour
     }
     private void FiringInput  (float fire)
     {
-        if (fire > 0){_mainWeapon[0].Play();}
-        else{_mainWeapon[0].Stop();}
+        if (fire>0){_mainWeapon._goFire = true;}
+        else {_mainWeapon._goFire = false;}
     }
     private void GetMovingVector (Vector2 input)
     {
