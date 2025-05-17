@@ -1,35 +1,47 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Animator))]
 public class EnemyBehavior : MonoBehaviour
 {
-    [Header("Components")]
-    Rigidbody _rb;
-    Animator _animator;
-    UIManager _scoreBoard;
     [Header("Variables")]
-    [SerializeField] float _enemySpeed = 20f;
-    [SerializeField] float _enemyHP = 3f;
-    private const string _bullet = "Bullet";
-    [SerializeField] float _points = 1f;
-    void OnEnable()
-    {
+    [SerializeField] private EnemyType _type;
+    [SerializeField] private float _speed = 20f;
+    [SerializeField] private int _startHealth = 3f;
+    [SerializeField] private float _points = 1f;
+
+    private Rigidbody _rb;
+    private Animator _animator;
+
+    private int _currentHealth;
+
+    private void Awake() {
         _rb = GetComponent<Rigidbody>();
         _animator = GetComponent<Animator>();
     }
+
+    private void Start() {
+        _currentHealth = _startHealth;
+    }
+
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.CompareTag(_bullet))
+        if (other.gameObject.CompareTag(GameTags.Bullet))
         {
-          _enemyHP --;
-          Destroy(other.gameObject);
+          _currentHealth--;
+          Destroy(other.gameObject); // вообще не нравится, но трогать не буду. должна быть система которая правильно говорит пульке, хотя бы что-то типа // other.transform.GetComponent<Bullet>().OnCollide(); - и там уже пулька решает что ей делать
           _animator.SetTrigger("Hit");
         }       
     }
-    void FixedUpdate()
+    
+    private void FixedUpdate()
     {
-        Vector3 enemyDirection = new Vector3(0,0,-1)*Time.fixedDeltaTime*_enemySpeed;
+        Vector3 enemyDirection = Vector3.back * (Time.fixedDeltaTime * _speed);
         _rb.linearVelocity = enemyDirection;
-        if (_enemyHP <= 0){Destroy(this.gameObject);GameManager.Instance.AddPoints(_points);}
+        
+        if (_currentHealth <= 0) {
+            GameManager.Instance.NotifyEnemyDestroy(_type);
+            Destroy(this.gameObject);
+        }
     }
 }

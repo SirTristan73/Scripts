@@ -1,32 +1,40 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public  class Weapon : MonoBehaviour
+public class Weapon : MonoBehaviour
 {
-    [SerializeField] GameObject _bullet;
-    [SerializeField] Transform _player;
-    [SerializeField] float _shootingSpeed = 1f;
-    private float _nextShotTime = 0f;
-    public bool _goFire = false;
-    public List<GameObject> _bulletsFired = new List<GameObject>();
+    [SerializeField] private GameObject _bulletPrefab;
+    [SerializeField] private Transform _player;
+    [SerializeField] private float _fireRate = 1f; // shots per second
 
-    void Start()
+    [HideInInspector] // не нужно показывать в эдиторе то, что зависит от инпута
+    public bool _isFireEventActive = false;
+
+    private ushort _framesBetweenShots;
+    private long _nextFireShotFrameCount;
+
+    private void Start()
     {
-        GameManager.Instance._totalTimer += FireRate;
+        // in case you'd have multiple fire modes where firerate would change - this needs to be a separate func, careful
+        _framesBetweenShots = _fireRate / 60f; // 60 frames in fixed update = 1s
     }
  
-    void FireWeapon()
+    private void FireWeapon()
     {
-        Instantiate(_bullet,transform.position,Quaternion.identity);
-        _bulletsFired.Add(_bullet);
-    }
-    void FireRate(float time)
-    {
-        if (_goFire && time >= _nextShotTime)
-        {
-            FireWeapon();
-            _nextShotTime = time + 1 / _shootingSpeed;
-        }
+        Instantiate(_bulletPrefab, transform.position, Quaternion.identity);
+        _nextFireShotFrameCount = Time.frameCount + _framesBetweenShots;
     }
 
+    private void FixedUpdate() {
+        if (!_isFireEventActive)
+        {
+            return;
+        }
+
+        if (Time.frameCount < _nextFireShotFrameCount) {
+            return;
+        }
+
+        FireWeapon();
+    }
 }

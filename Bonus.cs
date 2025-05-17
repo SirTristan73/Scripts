@@ -3,22 +3,22 @@ using UnityEngine;
 
 public class Bonus : MonoBehaviour
 {
-    [Header("Other Objects")]
-    private float _newPos = 0.2f;
-    private const string _bullet = "Bullet";
-    [Header("This Object")]
+    private const float NewPosOffset = 0.2f;
+
+    [Header("Settings")]
     [SerializeField] float _speed = 1f;
+    [SerializeField] Vector3 _width = new Vector3(3f, 0f, 0f);
+
     private float _movementFactor;
-    [SerializeField]  Vector3 _width = new Vector3(3,0,0);
     private Vector3 _endPosition;  
     private Vector3 _startPosition;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag(_bullet))
+        if (other.gameObject.CompareTag(GameTags.Bullet))
         {
-        Vector3 clonePosition = new Vector3 (_newPos,0,_newPos) + other.transform.position;
-        Instantiate (other,clonePosition,Quaternion.identity);
+            Vector3 clonePosition = new Vector3(NewPosOffset, 0f, NewPosOffset) + other.transform.position;
+            Instantiate(other,clonePosition,Quaternion.identity);
         }        
     }
     private void Start()
@@ -26,9 +26,10 @@ public class Bonus : MonoBehaviour
         _startPosition = transform.position;
         _endPosition = _startPosition + _width;
     }
+
     private void FixedUpdate()
     {
-       _movementFactor = Mathf.PingPong(Time.time * _speed,1f);
+       _movementFactor = Mathf.PingPong(Time.time * _speed,1f); // no idea what's this, it looks really sus but i am not familiar with pingpong func
        transform.position = Vector3.Lerp(_startPosition,_endPosition,_movementFactor);
     }
 

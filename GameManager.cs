@@ -4,16 +4,21 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 { 
     public static GameManager Instance;
-    [SerializeField] UIManager _uiManager;
-    private float _currentTime;
-    private float _totalTime;
+
+    [Header("References")]
+    [SerializeField] private UIManager _uiManager;
+    [SerializeField] private EnemyManager _enemyManager;
+
+    public LifecycleEventHandler LifecycleEventHandlerInstance { get; private set; } // not needed for now but I left as an example
+
     private float _currentPoints;
-    public event Action<float> _timer ;
-    public event Action<float> _totalTimer;
+
     private void Awake()
     {
         Instance=this;
+        LifecycleEventHandlerInstance = new LifecycleEventHandler();
     }
+
     private void FixedUpdate()
     {
         _currentTime = Time.fixedDeltaTime;
@@ -22,11 +27,10 @@ public class GameManager : MonoBehaviour
         _totalTimer?.Invoke(_totalTime);
         _uiManager.GetCurrentTime(_totalTime);
     }
-    public void AddPoints (float points)
-    {         
+
+    public void NotifyEnemyDestroy(EnemyType type) {
+        var points = _enemyManager.GetPointsRewardForEnemyType(type);
         _currentPoints += points;
         _uiManager.AddPointsProcess(_currentPoints);
     }
-
 }
-
