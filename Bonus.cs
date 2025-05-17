@@ -5,7 +5,6 @@ public class Bonus : MonoBehaviour
 {
     [Header("Other Objects")]
     private float _newPos = 0.2f;
-    private const string _bullet = "Bullet";
     [Header("This Object")]
     [SerializeField] float _speed = 1f;
     private float _movementFactor;
@@ -15,7 +14,7 @@ public class Bonus : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag(_bullet))
+        if (other.gameObject.CompareTag(GametagKeeper._bulletTag))
         {
         Vector3 clonePosition = new Vector3 (_newPos,0,_newPos) + other.transform.position;
         Instantiate (other,clonePosition,Quaternion.identity);

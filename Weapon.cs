@@ -7,7 +7,7 @@ public  class Weapon : MonoBehaviour
     [SerializeField] Transform _player;
     [SerializeField] float _shootingSpeed = 1f;
     private float _nextShotTime = 0f;
-    public bool _goFire = false;
+    public bool _isFireEventActive = false;
     public List<GameObject> _bulletsFired = new List<GameObject>();
 
     void Start()
@@ -22,7 +22,7 @@ public  class Weapon : MonoBehaviour
     }
     void FireRate(float time)
     {
-        if (_goFire && time >= _nextShotTime)
+        if (_isFireEventActive && time >= _nextShotTime)
         {
             FireWeapon();
             _nextShotTime = time + 1 / _shootingSpeed;

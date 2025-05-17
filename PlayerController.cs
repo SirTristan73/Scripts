@@ -21,21 +21,21 @@ public class PlayerController : MonoBehaviour
         Control.Instance._fire += FiringInput;
         Control.Instance._move += GetMovingVector;
     }
-    private void FiringInput  (float fire)
-    {
-        if (fire>0){_mainWeapon._goFire = true;}
-        else {_mainWeapon._goFire = false;}
-    }
-    private void GetMovingVector (Vector2 input)
-    {
-        _currentMoveInput = input;
-    }
     public void FixedUpdate()
     {
         //Moving
         var _deltaTime = Time.fixedDeltaTime;
-        Vector3 movingVector = 
-        new Vector3(_currentMoveInput.x,0,0)*_playerSpeed*_deltaTime;
-        _rb.linearVelocity = movingVector;        
+        Vector3 movingVector =
+        new Vector3(_currentMoveInput.x, 0, 0) * _playerSpeed * _deltaTime;
+        _rb.linearVelocity = movingVector;
+        //Firing        
+    }
+    private void FiringInput  (float fire)
+    {
+        _mainWeapon._isFireEventActive = fire > 0;
+    }
+    private void GetMovingVector (Vector2 input)
+    {
+        _currentMoveInput = input;
     }
 }

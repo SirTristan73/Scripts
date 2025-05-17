@@ -10,7 +10,6 @@ public class EnemyBehavior : MonoBehaviour
     [Header("Variables")]
     [SerializeField] float _enemySpeed = 20f;
     [SerializeField] float _enemyHP = 3f;
-    private const string _bullet = "Bullet";
     [SerializeField] float _points = 1f;
 
     void OnEnable()
@@ -21,7 +20,7 @@ public class EnemyBehavior : MonoBehaviour
     
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.CompareTag(_bullet))
+        if (other.gameObject.CompareTag(GametagKeeper._bulletTag))
         {
             _enemyHP--;
             _animator.SetTrigger("Hit");
