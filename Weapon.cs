@@ -12,7 +12,7 @@ public  class Weapon : MonoBehaviour
 
     void Start()
     {
-        GameManager.Instance._totalTimer += FireRate;
+        GameManager.Instance._totalLifeCycle += FireRate;
     }
  
     void FireWeapon()

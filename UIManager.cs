@@ -3,18 +3,22 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
-{    
+{
+    public static UIManager Instance;
     [SerializeField] TMP_Text _timeBoard;
     [SerializeField] TMP_Text _scoreBoard;
-    private const string _timerText = "Current time : ";
-    private const string _scoreBoardText = "Current Score : ";
 
-    public void GetCurrentTime (float currentTime)
+    public void OnEnable()
     {
-        _timeBoard.text=_timerText + currentTime.ToString("F1");    
+        Instance = this;
+    }
+
+    public void GetCurrentTime(float currentTime)
+    {
+        _timeBoard.text = currentTime.ToString("F1");
     }
     public void AddPointsProcess(float points)
     {
-        _scoreBoard.text = _scoreBoardText + points.ToString();
+        _scoreBoard.text = points.ToString();
     }
 }
